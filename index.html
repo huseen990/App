@@ -1,25 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>عرض الحسابات</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
+<body class="bg-gray-900 text-white min-h-screen pb-20">
   <!-- Header -->
   <div class="p-4 flex items-center justify-between bg-gray-800 shadow">
     <h1 class="text-xl font-bold">متجر الحسابات</h1>
     <button class="bg-blue-600 px-4 py-2 rounded text-sm">تواصل مع الدعم</button>
-  </div>
-
-  <!-- Filters -->
-  <div class="p-4 bg-gray-800 grid grid-cols-2 gap-2 text-sm">
+  </div>  <!-- شريط البحث -->  <div class="px-4 mt-2">
+    <input type="text" placeholder="ابحث عن حساب..." class="w-full p-2 rounded bg-gray-700 text-sm" />
+  </div>  <!-- Filters -->  <div class="p-4 bg-gray-800 grid grid-cols-2 gap-2 text-sm">
+    <select class="bg-gray-700 p-2 rounded">
+      <option>القسم الرئيسي</option>
+      <option>ألعاب</option>
+      <option>التواصل الاجتماعي</option>
+      <option>خدمات بث</option>
+    </select>
     <select class="bg-gray-700 p-2 rounded">
       <option>نوع التطبيق</option>
-      <option>ألعاب</option>
+      <option>PUBG</option>
+      <option>Free Fire</option>
       <option>Netflix</option>
       <option>Spotify</option>
+      <option>Instagram</option>
+      <option>Facebook</option>
     </select>
     <select class="bg-gray-700 p-2 rounded">
       <option>الفرز</option>
@@ -29,11 +36,7 @@
     </select>
     <input type="number" placeholder="السعر من" class="bg-gray-700 p-2 rounded">
     <input type="number" placeholder="السعر إلى" class="bg-gray-700 p-2 rounded">
-  </div>
-
-  <!-- Accounts Grid -->
-  <div class="grid grid-cols-2 gap-4 p-4">
-    <!-- Account Card -->
+  </div>  <!-- Accounts Grid -->  <div class="grid grid-cols-2 gap-4 p-4">
     <div class="bg-gray-800 rounded-xl p-2 shadow-lg">
       <img src="https://via.placeholder.com/150" class="rounded-lg w-full">
       <div class="mt-2">
@@ -45,16 +48,34 @@
         </div>
       </div>
     </div>
-    <!-- يمكنك تكرار البطاقات مع بيانات مختلفة -->
-  </div>
-
-  <!-- Bottom Nav -->
-  <div class="fixed bottom-0 left-0 w-full bg-gray-800 p-2 flex justify-around text-xs text-center">
-    <button class="flex flex-col items-center text-blue-400">
+    <!-- يمكن تكرار البطاقات مع بيانات مختلفة -->
+  </div>  <!-- صفحة رفع الحساب -->  <div id="uploadForm" class="hidden p-4">
+    <h2 class="text-lg font-semibold mb-2">رفع حساب جديد</h2>
+    <form class="space-y-3">
+      <input type="text" placeholder="اسم الحساب (مثال: حساب PUBG)" class="w-full p-2 rounded bg-gray-700 text-sm" />
+      <select class="w-full p-2 rounded bg-gray-700 text-sm">
+        <option>اختر القسم</option>
+        <option>ألعاب</option>
+        <option>التواصل الاجتماعي</option>
+        <option>بث وميديا</option>
+      </select>
+      <select class="w-full p-2 rounded bg-gray-700 text-sm">
+        <option>نوع التطبيق</option>
+        <option>PUBG</option>
+        <option>Netflix</option>
+        <option>Facebook</option>
+      </select>
+      <input type="number" placeholder="السعر المطلوب (دولار)" class="w-full p-2 rounded bg-gray-700 text-sm" />
+      <input type="text" placeholder="رابط التواصل (يوزر تيليغرام)" class="w-full p-2 rounded bg-gray-700 text-sm" />
+      <input type="file" class="w-full p-2 rounded bg-gray-700 text-sm" />
+      <button class="w-full bg-blue-600 py-2 rounded text-white">نشر الحساب</button>
+    </form>
+  </div>  <!-- Bottom Nav -->  <div class="fixed bottom-0 left-0 w-full bg-gray-800 p-2 flex justify-around text-xs text-center">
+    <button class="flex flex-col items-center text-blue-400" onclick="showSection('market')">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/></svg>
       <span>الرئيسية</span>
     </button>
-    <button class="flex flex-col items-center">
+    <button class="flex flex-col items-center" onclick="showSection('uploadForm')">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
       <span>رفع حساب</span>
     </button>
@@ -62,6 +83,13 @@
       <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
       <span>طلباتي</span>
     </button>
-  </div>
-</body>
-</html>
+  </div>  <script>
+    function showSection(id) {
+      document.getElementById("uploadForm").classList.add("hidden");
+      // أخفِ كل الأقسام الأخرى هنا عند الإضافة
+      if (id === 'uploadForm') {
+        document.getElementById("uploadForm").classList.remove("hidden");
+      }
+    }
+  </script></body>
+                                      </html>
