@@ -1,46 +1,50 @@
-from pyrogram import Client, filters from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, Message
+from pyrogram import Client, filters from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message, CallbackQuery
 
-app = Client("accounts_mini_app", bot_token="YOUR_BOT_TOKEN", api_id=12345, api_hash="your_api_hash")
+app = Client("account_marketplace")
 
-بيانات الحسابات النموذجية
+قاعدة بيانات مؤقتة (تُستبدل بقاعدة حقيقية لاحقًا)
 
-accounts = [ {"name": "PUBG Global", "category": "ألعاب", "app": "PUBG", "price": 2.5, "id": 1}, {"name": "Instagram Pro", "category": "تواصل اجتماعي", "app": "Instagram", "price": 3.0, "id": 2}, {"name": "Call of Duty", "category": "ألعاب", "app": "COD", "price": 4.0, "id": 3}, {"name": "TikTok Plus", "category": "تواصل اجتماعي", "app": "TikTok", "price": 1.2, "id": 4}, ]
+accounts = []
 
-categories = ["الكل", "ألعاب", "تواصل اجتماعي"]
+الأقسام الرئيسية والتطبيقات التابعة لها
 
-واجهة البحث والفلاتر
+categories = { "ألعاب": ["ببجي", "فري فاير", "كول أوف ديوتي"], "تواصل": ["انستغرام", "سناب شات", "تيليغرام"], "بث مباشر": ["نتفليكس", "شاهد", "OSN"] }
 
-@app.on_message(filters.command("start")) async def start(client, message: Message): await message.reply( "مرحبًا بك في متجر الحسابات!", reply_markup=main_menu() )
+current_filters = { "category": None, "app": None, "price_min": 0, "price_max": 99999, "sort": "الأحدث", "search": "" }
 
-القائمة الرئيسية
+filter_visible = False
 
-def main_menu(): return InlineKeyboardMarkup([ [ InlineKeyboardButton("عرض الحسابات", callback_data="view_accounts"), InlineKeyboardButton("رفع حساب", callback_data="upload_account") ], ])
+الواجهة الرئيسية
 
-عرض الحسابات بفلترة وتصنيفات
+@app.on_message(filters.command("start")) async def start(client, message): await show_main_menu(message)
 
-@app.on_callback_query(filters.regex("view_accounts")) async def show_accounts(client, callback_query: CallbackQuery): await callback_query.message.edit( "اختر الفئة أو استخدم الفلتر:", reply_markup=filter_menu(show_filter=False) )
+async def show_main_menu(message): keyboard = [ [InlineKeyboardButton("رفع حساب", callback_data="upload")], [InlineKeyboardButton("بحث", switch_inline_query_current_chat="")], [InlineKeyboardButton("فلتر", callback_data="toggle_filter")] ] await message.reply("مرحباً بك في متجر الحسابات، اختر من القائمة:", reply_markup=InlineKeyboardMarkup(keyboard)) await show_accounts(message)
 
-قائمة الفلاتر
+عرض الحسابات مع الفلاتر
 
-def filter_menu(show_filter=False): keyboard = [ [InlineKeyboardButton(cat, callback_data=f"cat_{cat}") for cat in categories] ] if show_filter: keyboard.append([ InlineKeyboardButton("فرز حسب السعر", callback_data="sort_price"), InlineKeyboardButton("الأحدث", callback_data="sort_latest") ]) keyboard.append([ InlineKeyboardButton("إظهار/إخفاء الفلاتر", callback_data="toggle_filter") ]) keyboard.append([ InlineKeyboardButton("رجوع", callback_data="back") ]) return InlineKeyboardMarkup(keyboard)
-
-تنفيذ الفلترة
-
-@app.on_callback_query(filters.regex("cat_")) async def filter_by_category(client, callback_query: CallbackQuery): cat = callback_query.data.split("")[1] filtered = [acc for acc in accounts if cat == "الكل" or acc['category'] == cat] text = f"نتائج التصنيف: {cat}\n\n" if not filtered: text += "لا توجد نتائج." else: for acc in filtered: text += f"{acc['name']} ({acc['app']}) - {acc['price']}$\n/Contact{acc['id']}\n\n" await callback_query.message.edit(text, reply_markup=filter_menu())
-
-زر إظهار وإخفاء الفلاتر
-
-@app.on_callback_query(filters.regex("toggle_filter")) async def toggle_filters(client, callback_query: CallbackQuery): current = callback_query.message.reply_markup.inline_keyboard show_filter = not any("فرز" in btn.text for row in current for btn in row) await callback_query.message.edit("اختر الفئة أو استخدم الفلتر:", reply_markup=filter_menu(show_filter))
+async def show_accounts(message): filtered = filter_accounts() text = "" for acc in filtered: text += f"\n**{acc['category']} - {acc['app']}**\nالسعر: {acc['price']}\nالوصف: {acc['desc']}\n» للتواصل مع البائع: {acc['contact']}\n\n" if not text: text = "لا توجد حسابات مطابقة حالياً." await message.reply(text)
 
 رفع حساب جديد
 
-@app.on_callback_query(filters.regex("upload_account")) async def upload_account(client, callback_query: CallbackQuery): await callback_query.message.edit("أرسل بيانات الحساب بهذا الشكل:\nالاسم - القسم - التطبيق - السعر")
+@app.on_callback_query(filters.regex("upload")) async def upload_form(client, callback_query): await callback_query.message.edit_text("أرسل معلومات الحساب بالشكل التالي:\n\nالفئة - التطبيق\nالسعر\nالوصف\nوسيلة التواصل") app.set_parse_mode("Markdown") app.register_next_step_handler(callback_query.message, save_account)
 
-@app.on_message(filters.text & ~filters.command("start")) async def receive_account(client, message: Message): try: name, category, app_name, price = message.text.split(" - ") acc_id = len(accounts) + 1 accounts.append({"name": name, "category": category, "app": app_name, "price": float(price), "id": acc_id}) await message.reply("تم إضافة الحساب بنجاح!", reply_markup=main_menu()) except: await message.reply("الرجاء إرسال البيانات بالشكل الصحيح: الاسم - القسم - التطبيق - السعر")
+def save_account(message): try: lines = message.text.split("\n") cat_app = lines[0].split(" - ") account = { "category": cat_app[0], "app": cat_app[1], "price": float(lines[1]), "desc": lines[2], "contact": lines[3] } accounts.append(account) app.send_message(message.chat.id, "تم إضافة الحساب بنجاح!") except: app.send_message(message.chat.id, "حدث خطأ بالتنسيق، تأكد من الشكل المطلوب.")
 
-زر تواصل مع البائع
+إظهار / إخفاء الفلتر
 
-@app.on_message(filters.command("Contact")) async def contact_seller(client, message: Message): acc_id = int(message.text.split("_")[-1]) account = next((acc for acc in accounts if acc['id'] == acc_id), None) if account: await message.reply(f"للتواصل مع البائع حول الحساب: {account['name']}\nراسلنا الآن.") else: await message.reply("لم يتم العثور على الحساب.")
+@app.on_callback_query(filters.regex("toggle_filter")) async def toggle_filter(client, callback_query): global filter_visible filter_visible = not filter_visible if filter_visible: keyboard = [] for cat in categories: keyboard.append([InlineKeyboardButton(cat, callback_data=f"filter_cat:{cat}")]) keyboard.append([InlineKeyboardButton("إخفاء الفلتر", callback_data="toggle_filter")]) await callback_query.message.edit_text("اختر القسم:", reply_markup=InlineKeyboardMarkup(keyboard)) else: await callback_query.message.delete()
+
+تحديد القسم
+
+@app.on_callback_query(filters.regex("filter_cat:(.+)")) async def filter_category(client, callback_query): cat = callback_query.data.split(":")[1] current_filters["category"] = cat current_filters["app"] = None apps = categories[cat] keyboard = [[InlineKeyboardButton(app, callback_data=f"filter_app:{app}")] for app in apps] keyboard.append([InlineKeyboardButton("رجوع", callback_data="toggle_filter")]) await callback_query.message.edit_text(f"اختر تطبيق من {cat}:", reply_markup=InlineKeyboardMarkup(keyboard))
+
+تحديد التطبيق
+
+@app.on_callback_query(filters.regex("filter_app:(.+)")) async def filter_app(client, callback_query): app_name = callback_query.data.split(":")[1] current_filters["app"] = app_name await callback_query.message.edit_text(f"تم اختيار التطبيق: {app_name}\nاكتب /start لعرض النتائج.")
+
+فلترة الحسابات بناءً على الشروط
+
+def filter_accounts(): results = [] for acc in accounts: if current_filters["category"] and acc["category"] != current_filters["category"]: continue if current_filters["app"] and acc["app"] != current_filters["app"]: continue if not (current_filters["price_min"] <= acc["price"] <= current_filters["price_max"]): continue if current_filters["search"] and current_filters["search"].lower() not in acc["desc"].lower(): continue results.append(acc) if current_filters["sort"] == "الأرخص": results.sort(key=lambda x: x["price"]) elif current_filters["sort"] == "الأحدث": results = list(reversed(results)) return results
 
 app.run()
 
