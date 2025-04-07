@@ -82,18 +82,30 @@
     <h2 class="text-lg font-semibold mb-2">رفع حساب جديد</h2>
     <form class="space-y-3">
       <input type="text" placeholder="اسم الحساب (مثال: حساب PUBG)" class="w-full p-2 rounded bg-gray-700 text-sm" />
-      <select class="w-full p-2 rounded bg-gray-700 text-sm">
-        <option>اختر القسم</option>
-        <option>ألعاب</option>
-        <option>التواصل الاجتماعي</option>
-        <option>بث وميديا</option>
+      <select class="w-full p-2 rounded bg-gray-700 text-sm" id="categorySelect" onchange="toggleCategoryFields()">
+        <option value="">اختر القسم</option>
+        <option value="games">ألعاب</option>
+        <option value="social">التواصل الاجتماعي</option>
+        <option value="streaming">بث وميديا</option>
       </select>
-      <select class="w-full p-2 rounded bg-gray-700 text-sm">
-        <option>نوع التطبيق</option>
-        <option>PUBG</option>
-        <option>Netflix</option>
-        <option>Facebook</option>
-      </select>
+      <div id="gameFields" class="hidden">
+        <select class="w-full p-2 rounded bg-gray-700 text-sm">
+          <option>PUBG</option>
+          <option>Free Fire</option>
+        </select>
+      </div>
+      <div id="socialFields" class="hidden">
+        <select class="w-full p-2 rounded bg-gray-700 text-sm">
+          <option>Instagram</option>
+          <option>Facebook</option>
+        </select>
+      </div>
+      <div id="streamingFields" class="hidden">
+        <select class="w-full p-2 rounded bg-gray-700 text-sm">
+          <option>Netflix</option>
+          <option>Spotify</option>
+        </select>
+      </div>
       <input type="number" placeholder="السعر المطلوب (دولار)" class="w-full p-2 rounded bg-gray-700 text-sm" />
       <input type="text" placeholder="رابط التواصل (يوزر تيليغرام)" class="w-full p-2 rounded bg-gray-700 text-sm" />
       <input type="file" class="w-full p-2 rounded bg-gray-700 text-sm" />
@@ -124,7 +136,7 @@
       filters.classList.toggle("hidden");
     }
 
-    // Filter accounts by category
+    // Function to filter accounts by category
     function filterByCategory() {
       const category = document.getElementById("categoryFilter").value;
       const allCards = document.querySelectorAll(".accountCard");
@@ -137,7 +149,7 @@
       });
     }
 
-    // Filter accounts by app type
+    // Function to filter accounts by app type
     function filterByApp() {
       const app = document.getElementById("appFilter").value;
       const allCards = document.querySelectorAll(".accountCard");
@@ -164,13 +176,31 @@
       });
     }
 
+    // Show or hide fields based on category selection in upload form
+    function toggleCategoryFields() {
+      const category = document.getElementById("categorySelect").value;
+      document.getElementById("gameFields").classList.add("hidden");
+      document.getElementById("socialFields").classList.add("hidden");
+      document.getElementById("streamingFields").classList.add("hidden");
+
+      if (category === "games") {
+        document.getElementById("gameFields").classList.remove("hidden");
+      } else if (category === "social") {
+        document.getElementById("socialFields").classList.remove("hidden");
+      } else if (category === "streaming") {
+        document.getElementById("streamingFields").classList.remove("hidden");
+      }
+    }
+
     // Function to show specific sections
     function showSection(id) {
       document.getElementById("uploadForm").classList.add("hidden");
+      document.getElementById("accountsGrid").classList.remove("hidden");
       if (id === 'uploadForm') {
+        document.getElementById("accountsGrid").classList.add("hidden");
         document.getElementById("uploadForm").classList.remove("hidden");
       }
     }
   </script>
 </body>
-        </html>
+  </html>
