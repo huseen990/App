@@ -1,95 +1,46 @@
-<!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>عرض الحسابات</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-900 text-white min-h-screen pb-20">
-  <!-- Header -->
-  <div class="p-4 flex items-center justify-between bg-gray-800 shadow">
-    <h1 class="text-xl font-bold">متجر الحسابات</h1>
-    <button class="bg-blue-600 px-4 py-2 rounded text-sm">تواصل مع الدعم</button>
-  </div>  <!-- شريط البحث -->  <div class="px-4 mt-2">
-    <input type="text" placeholder="ابحث عن حساب..." class="w-full p-2 rounded bg-gray-700 text-sm" />
-  </div>  <!-- Filters -->  <div class="p-4 bg-gray-800 grid grid-cols-2 gap-2 text-sm">
-    <select class="bg-gray-700 p-2 rounded">
-      <option>القسم الرئيسي</option>
-      <option>ألعاب</option>
-      <option>التواصل الاجتماعي</option>
-      <option>خدمات بث</option>
-    </select>
-    <select class="bg-gray-700 p-2 rounded">
-      <option>نوع التطبيق</option>
-      <option>PUBG</option>
-      <option>Free Fire</option>
-      <option>Netflix</option>
-      <option>Spotify</option>
-      <option>Instagram</option>
-      <option>Facebook</option>
-    </select>
-    <select class="bg-gray-700 p-2 rounded">
-      <option>الفرز</option>
-      <option>الأحدث</option>
-      <option>الأقل سعرًا</option>
-      <option>الأعلى سعرًا</option>
-    </select>
-    <input type="number" placeholder="السعر من" class="bg-gray-700 p-2 rounded">
-    <input type="number" placeholder="السعر إلى" class="bg-gray-700 p-2 rounded">
-  </div>  <!-- Accounts Grid -->  <div class="grid grid-cols-2 gap-4 p-4">
-    <div class="bg-gray-800 rounded-xl p-2 shadow-lg">
-      <img src="https://via.placeholder.com/150" class="rounded-lg w-full">
-      <div class="mt-2">
-        <p class="text-sm font-semibold">حساب PUBG</p>
-        <p class="text-xs text-gray-400">ID: 12345</p>
-        <div class="mt-2 flex justify-between items-center">
-          <span class="text-blue-400 font-bold text-sm">$5.00</span>
-          <a href="https://t.me/seller_username" class="text-blue-500 text-xs underline">تواصل مع البائع</a>
-        </div>
-      </div>
-    </div>
-    <!-- يمكن تكرار البطاقات مع بيانات مختلفة -->
-  </div>  <!-- صفحة رفع الحساب -->  <div id="uploadForm" class="hidden p-4">
-    <h2 class="text-lg font-semibold mb-2">رفع حساب جديد</h2>
-    <form class="space-y-3">
-      <input type="text" placeholder="اسم الحساب (مثال: حساب PUBG)" class="w-full p-2 rounded bg-gray-700 text-sm" />
-      <select class="w-full p-2 rounded bg-gray-700 text-sm">
-        <option>اختر القسم</option>
-        <option>ألعاب</option>
-        <option>التواصل الاجتماعي</option>
-        <option>بث وميديا</option>
-      </select>
-      <select class="w-full p-2 rounded bg-gray-700 text-sm">
-        <option>نوع التطبيق</option>
-        <option>PUBG</option>
-        <option>Netflix</option>
-        <option>Facebook</option>
-      </select>
-      <input type="number" placeholder="السعر المطلوب (دولار)" class="w-full p-2 rounded bg-gray-700 text-sm" />
-      <input type="text" placeholder="رابط التواصل (يوزر تيليغرام)" class="w-full p-2 rounded bg-gray-700 text-sm" />
-      <input type="file" class="w-full p-2 rounded bg-gray-700 text-sm" />
-      <button class="w-full bg-blue-600 py-2 rounded text-white">نشر الحساب</button>
-    </form>
-  </div>  <!-- Bottom Nav -->  <div class="fixed bottom-0 left-0 w-full bg-gray-800 p-2 flex justify-around text-xs text-center">
-    <button class="flex flex-col items-center text-blue-400" onclick="showSection('market')">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/></svg>
-      <span>الرئيسية</span>
-    </button>
-    <button class="flex flex-col items-center" onclick="showSection('uploadForm')">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
-      <span>رفع حساب</span>
-    </button>
-    <button class="flex flex-col items-center">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
-      <span>طلباتي</span>
-    </button>
-  </div>  <script>
-    function showSection(id) {
-      document.getElementById("uploadForm").classList.add("hidden");
-      // أخفِ كل الأقسام الأخرى هنا عند الإضافة
-      if (id === 'uploadForm') {
-        document.getElementById("uploadForm").classList.remove("hidden");
-      }
-    }
-  </script></body>
-                                      </html>
+from pyrogram import Client, filters from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, Message
+
+app = Client("accounts_mini_app", bot_token="YOUR_BOT_TOKEN", api_id=12345, api_hash="your_api_hash")
+
+بيانات الحسابات النموذجية
+
+accounts = [ {"name": "PUBG Global", "category": "ألعاب", "app": "PUBG", "price": 2.5, "id": 1}, {"name": "Instagram Pro", "category": "تواصل اجتماعي", "app": "Instagram", "price": 3.0, "id": 2}, {"name": "Call of Duty", "category": "ألعاب", "app": "COD", "price": 4.0, "id": 3}, {"name": "TikTok Plus", "category": "تواصل اجتماعي", "app": "TikTok", "price": 1.2, "id": 4}, ]
+
+categories = ["الكل", "ألعاب", "تواصل اجتماعي"]
+
+واجهة البحث والفلاتر
+
+@app.on_message(filters.command("start")) async def start(client, message: Message): await message.reply( "مرحبًا بك في متجر الحسابات!", reply_markup=main_menu() )
+
+القائمة الرئيسية
+
+def main_menu(): return InlineKeyboardMarkup([ [ InlineKeyboardButton("عرض الحسابات", callback_data="view_accounts"), InlineKeyboardButton("رفع حساب", callback_data="upload_account") ], ])
+
+عرض الحسابات بفلترة وتصنيفات
+
+@app.on_callback_query(filters.regex("view_accounts")) async def show_accounts(client, callback_query: CallbackQuery): await callback_query.message.edit( "اختر الفئة أو استخدم الفلتر:", reply_markup=filter_menu(show_filter=False) )
+
+قائمة الفلاتر
+
+def filter_menu(show_filter=False): keyboard = [ [InlineKeyboardButton(cat, callback_data=f"cat_{cat}") for cat in categories] ] if show_filter: keyboard.append([ InlineKeyboardButton("فرز حسب السعر", callback_data="sort_price"), InlineKeyboardButton("الأحدث", callback_data="sort_latest") ]) keyboard.append([ InlineKeyboardButton("إظهار/إخفاء الفلاتر", callback_data="toggle_filter") ]) keyboard.append([ InlineKeyboardButton("رجوع", callback_data="back") ]) return InlineKeyboardMarkup(keyboard)
+
+تنفيذ الفلترة
+
+@app.on_callback_query(filters.regex("cat_")) async def filter_by_category(client, callback_query: CallbackQuery): cat = callback_query.data.split("")[1] filtered = [acc for acc in accounts if cat == "الكل" or acc['category'] == cat] text = f"نتائج التصنيف: {cat}\n\n" if not filtered: text += "لا توجد نتائج." else: for acc in filtered: text += f"{acc['name']} ({acc['app']}) - {acc['price']}$\n/Contact{acc['id']}\n\n" await callback_query.message.edit(text, reply_markup=filter_menu())
+
+زر إظهار وإخفاء الفلاتر
+
+@app.on_callback_query(filters.regex("toggle_filter")) async def toggle_filters(client, callback_query: CallbackQuery): current = callback_query.message.reply_markup.inline_keyboard show_filter = not any("فرز" in btn.text for row in current for btn in row) await callback_query.message.edit("اختر الفئة أو استخدم الفلتر:", reply_markup=filter_menu(show_filter))
+
+رفع حساب جديد
+
+@app.on_callback_query(filters.regex("upload_account")) async def upload_account(client, callback_query: CallbackQuery): await callback_query.message.edit("أرسل بيانات الحساب بهذا الشكل:\nالاسم - القسم - التطبيق - السعر")
+
+@app.on_message(filters.text & ~filters.command("start")) async def receive_account(client, message: Message): try: name, category, app_name, price = message.text.split(" - ") acc_id = len(accounts) + 1 accounts.append({"name": name, "category": category, "app": app_name, "price": float(price), "id": acc_id}) await message.reply("تم إضافة الحساب بنجاح!", reply_markup=main_menu()) except: await message.reply("الرجاء إرسال البيانات بالشكل الصحيح: الاسم - القسم - التطبيق - السعر")
+
+زر تواصل مع البائع
+
+@app.on_message(filters.command("Contact")) async def contact_seller(client, message: Message): acc_id = int(message.text.split("_")[-1]) account = next((acc for acc in accounts if acc['id'] == acc_id), None) if account: await message.reply(f"للتواصل مع البائع حول الحساب: {account['name']}\nراسلنا الآن.") else: await message.reply("لم يتم العثور على الحساب.")
+
+app.run()
+
