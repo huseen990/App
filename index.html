@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,34 +11,48 @@
   <div class="p-4 flex items-center justify-between bg-gray-800 shadow">
     <h1 class="text-xl font-bold">متجر الحسابات</h1>
     <button class="bg-blue-600 px-4 py-2 rounded text-sm">تواصل مع الدعم</button>
-  </div>  <!-- شريط البحث -->  <div class="px-4 mt-2">
-    <input type="text" placeholder="ابحث عن حساب..." class="w-full p-2 rounded bg-gray-700 text-sm" />
-  </div>  <!-- Filters -->  <div class="p-4 bg-gray-800 grid grid-cols-2 gap-2 text-sm">
-    <select class="bg-gray-700 p-2 rounded">
-      <option>القسم الرئيسي</option>
-      <option>ألعاب</option>
-      <option>التواصل الاجتماعي</option>
-      <option>خدمات بث</option>
+  </div>  
+
+  <!-- Search Bar -->
+  <div class="px-4 mt-2 mb-4">
+    <input type="text" placeholder="ابحث عن حساب..." class="w-full p-2 rounded bg-gray-700 text-sm" id="searchInput" oninput="filterAccounts()"/>
+  </div>  
+
+  <!-- Button to toggle Filters -->
+  <div class="px-4 mb-2">
+    <button class="w-full bg-blue-600 py-2 rounded text-white" onclick="toggleFilters()">إظهار/إخفاء الفلتر</button>
+  </div>
+
+  <!-- Filters -->
+  <div id="filters" class="p-4 bg-gray-800 grid grid-cols-2 gap-2 text-sm hidden">
+    <select class="bg-gray-700 p-2 rounded" id="categoryFilter" onchange="filterByCategory()">
+      <option value="">القسم الرئيسي</option>
+      <option value="games">ألعاب</option>
+      <option value="social">التواصل الاجتماعي</option>
+      <option value="streaming">خدمات بث</option>
     </select>
-    <select class="bg-gray-700 p-2 rounded">
-      <option>نوع التطبيق</option>
-      <option>PUBG</option>
-      <option>Free Fire</option>
-      <option>Netflix</option>
-      <option>Spotify</option>
-      <option>Instagram</option>
-      <option>Facebook</option>
+    <select class="bg-gray-700 p-2 rounded" id="appFilter" onchange="filterByApp()">
+      <option value="">نوع التطبيق</option>
+      <option value="PUBG">PUBG</option>
+      <option value="Free Fire">Free Fire</option>
+      <option value="Netflix">Netflix</option>
+      <option value="Spotify">Spotify</option>
+      <option value="Instagram">Instagram</option>
+      <option value="Facebook">Facebook</option>
     </select>
-    <select class="bg-gray-700 p-2 rounded">
-      <option>الفرز</option>
-      <option>الأحدث</option>
-      <option>الأقل سعرًا</option>
-      <option>الأعلى سعرًا</option>
+    <select class="bg-gray-700 p-2 rounded" id="sortFilter">
+      <option value="">الفرز</option>
+      <option value="latest">الأحدث</option>
+      <option value="cheapest">الأقل سعرًا</option>
+      <option value="most_expensive">الأعلى سعرًا</option>
     </select>
-    <input type="number" placeholder="السعر من" class="bg-gray-700 p-2 rounded">
-    <input type="number" placeholder="السعر إلى" class="bg-gray-700 p-2 rounded">
-  </div>  <!-- Accounts Grid -->  <div class="grid grid-cols-2 gap-4 p-4">
-    <div class="bg-gray-800 rounded-xl p-2 shadow-lg">
+    <input type="number" placeholder="السعر من" class="bg-gray-700 p-2 rounded" id="priceFrom">
+    <input type="number" placeholder="السعر إلى" class="bg-gray-700 p-2 rounded" id="priceTo">
+  </div>  
+
+  <!-- Accounts Grid -->
+  <div id="accountsGrid" class="grid grid-cols-2 gap-4 p-4">
+    <div class="accountCard bg-gray-800 rounded-xl p-2 shadow-lg game">
       <img src="https://via.placeholder.com/150" class="rounded-lg w-full">
       <div class="mt-2">
         <p class="text-sm font-semibold">حساب PUBG</p>
@@ -48,8 +63,22 @@
         </div>
       </div>
     </div>
-    <!-- يمكن تكرار البطاقات مع بيانات مختلفة -->
-  </div>  <!-- صفحة رفع الحساب -->  <div id="uploadForm" class="hidden p-4">
+    <div class="accountCard bg-gray-800 rounded-xl p-2 shadow-lg social">
+      <img src="https://via.placeholder.com/150" class="rounded-lg w-full">
+      <div class="mt-2">
+        <p class="text-sm font-semibold">حساب Instagram</p>
+        <p class="text-xs text-gray-400">ID: 67890</p>
+        <div class="mt-2 flex justify-between items-center">
+          <span class="text-blue-400 font-bold text-sm">$10.00</span>
+          <a href="https://t.me/seller_username" class="text-blue-500 text-xs underline">تواصل مع البائع</a>
+        </div>
+      </div>
+    </div>
+    <!-- Add more accounts with different categories -->
+  </div>  
+
+  <!-- Upload Form -->
+  <div id="uploadForm" class="hidden p-4">
     <h2 class="text-lg font-semibold mb-2">رفع حساب جديد</h2>
     <form class="space-y-3">
       <input type="text" placeholder="اسم الحساب (مثال: حساب PUBG)" class="w-full p-2 rounded bg-gray-700 text-sm" />
@@ -70,7 +99,10 @@
       <input type="file" class="w-full p-2 rounded bg-gray-700 text-sm" />
       <button class="w-full bg-blue-600 py-2 rounded text-white">نشر الحساب</button>
     </form>
-  </div>  <!-- Bottom Nav -->  <div class="fixed bottom-0 left-0 w-full bg-gray-800 p-2 flex justify-around text-xs text-center">
+  </div>  
+
+  <!-- Bottom Nav -->
+  <div class="fixed bottom-0 left-0 w-full bg-gray-800 p-2 flex justify-around text-xs text-center">
     <button class="flex flex-col items-center text-blue-400" onclick="showSection('market')">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/></svg>
       <span>الرئيسية</span>
@@ -83,13 +115,62 @@
       <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
       <span>طلباتي</span>
     </button>
-  </div>  <script>
+  </div>  
+
+  <script>
+    // Toggle Filters visibility
+    function toggleFilters() {
+      const filters = document.getElementById("filters");
+      filters.classList.toggle("hidden");
+    }
+
+    // Filter accounts by category
+    function filterByCategory() {
+      const category = document.getElementById("categoryFilter").value;
+      const allCards = document.querySelectorAll(".accountCard");
+      allCards.forEach(card => {
+        if (category === "" || card.classList.contains(category)) {
+          card.classList.remove("hidden");
+        } else {
+          card.classList.add("hidden");
+        }
+      });
+    }
+
+    // Filter accounts by app type
+    function filterByApp() {
+      const app = document.getElementById("appFilter").value;
+      const allCards = document.querySelectorAll(".accountCard");
+      allCards.forEach(card => {
+        if (app === "" || card.querySelector("p").textContent.includes(app)) {
+          card.classList.remove("hidden");
+        } else {
+          card.classList.add("hidden");
+        }
+      });
+    }
+
+    // Function to filter accounts by search input
+    function filterAccounts() {
+      const searchInput = document.getElementById("searchInput").value.toLowerCase();
+      const accounts = document.querySelectorAll(".accountCard");
+      accounts.forEach(account => {
+        const accountName = account.querySelector("p").textContent.toLowerCase();
+        if (accountName.includes(searchInput)) {
+          account.classList.remove("hidden");
+        } else {
+          account.classList.add("hidden");
+        }
+      });
+    }
+
+    // Function to show specific sections
     function showSection(id) {
       document.getElementById("uploadForm").classList.add("hidden");
-      // أخفِ كل الأقسام الأخرى هنا عند الإضافة
       if (id === 'uploadForm') {
         document.getElementById("uploadForm").classList.remove("hidden");
       }
     }
-  </script></body>
-      </html>
+  </script>
+</body>
+        </html>
