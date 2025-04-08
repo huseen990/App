@@ -1,206 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>عرض الحسابات</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white min-h-screen pb-20">
-  <!-- Header -->
+<body class="bg-gray-900 text-white">
+
+      <!-- Header -->
   <div class="p-4 flex items-center justify-between bg-gray-800 shadow">
     <h1 class="text-xl font-bold">متجر الحسابات</h1>
     <button class="bg-blue-600 px-4 py-2 rounded text-sm">تواصل مع الدعم</button>
-  </div>  
-
-  <!-- Search Bar -->
-  <div class="px-4 mt-2 mb-4">
-    <input type="text" placeholder="ابحث عن حساب..." class="w-full p-2 rounded bg-gray-700 text-sm" id="searchInput" oninput="filterAccounts()"/>
-  </div>  
-
-  <!-- Button to toggle Filters -->
-  <div class="px-4 mb-2">
-    <button class="w-full bg-blue-600 py-2 rounded text-white" onclick="toggleFilters()">إظهار/إخفاء الفلتر</button>
   </div>
+  
+<div id="searchBar" class="px-4 pt-3 pb-2">
+  <input type="text" placeholder="ابحث عن حساب..." class="w-full p-2 rounded bg-gray-800 text-white placeholder-gray-500">
+</div>
 
-  <!-- Filters -->
-  <div id="filters" class="p-4 bg-gray-800 grid grid-cols-2 gap-2 text-sm hidden">
-    <select class="bg-gray-700 p-2 rounded" id="categoryFilter" onchange="filterByCategory()">
-      <option value="">القسم الرئيسي</option>
-      <option value="games">ألعاب</option>
-      <option value="social">التواصل الاجتماعي</option>
-      <option value="streaming">خدمات بث</option>
-    </select>
-    <select class="bg-gray-700 p-2 rounded" id="appFilter" onchange="filterByApp()">
-      <option value="">نوع التطبيق</option>
-      <option value="PUBG">PUBG</option>
-      <option value="Free Fire">Free Fire</option>
-      <option value="Netflix">Netflix</option>
-      <option value="Spotify">Spotify</option>
-      <option value="Instagram">Instagram</option>
-      <option value="Facebook">Facebook</option>
-    </select>
-    <select class="bg-gray-700 p-2 rounded" id="sortFilter">
-      <option value="">الفرز</option>
-      <option value="latest">الأحدث</option>
-      <option value="cheapest">الأقل سعرًا</option>
-      <option value="most_expensive">الأعلى سعرًا</option>
-    </select>
-    <input type="number" placeholder="السعر من" class="bg-gray-700 p-2 rounded" id="priceFrom">
-    <input type="number" placeholder="السعر إلى" class="bg-gray-700 p-2 rounded" id="priceTo">
-  </div>  
+<!-- الفلاتر -->
+<div id="filters" class="px-4 py-2 space-y-2">
+  <select id="categoryFilter" onchange="toggleAppFilter()" class="w-full p-2 rounded bg-gray-800 text-white">
+    <option disabled selected>اختر القسم</option>
+    <option>قسم الألعاب</option>
+    <option>قسم التطبيقات</option>
+  </select>
 
-  <!-- Accounts Grid -->
-  <div id="accountsGrid" class="grid grid-cols-2 gap-4 p-4">
-    <div class="accountCard bg-gray-800 rounded-xl p-2 shadow-lg game">
-      <img src="https://via.placeholder.com/150" class="rounded-lg w-full">
-      <div class="mt-2">
-        <p class="text-sm font-semibold">حساب PUBG</p>
-        <p class="text-xs text-gray-400">ID: 12345</p>
-        <div class="mt-2 flex justify-between items-center">
-          <span class="text-blue-400 font-bold text-sm">$5.00</span>
-          <a href="https://t.me/seller_username" class="text-blue-500 text-xs underline">تواصل مع البائع</a>
-        </div>
+  <select id="appTypeFilter" class="w-full p-2 rounded bg-gray-800 text-white hidden">
+    <option>TikTok</option>
+    <option>Instagram</option>
+    <option>Free Fire</option>
+  </select>
+
+  <div class="flex justify-between gap-2">
+    <select class="w-1/2 p-2 rounded bg-gray-800 text-white">
+      <option>الأحدث</option>
+      <option>الأرخص</option>
+      <option>الأغلى</option>
+    </select>
+
+    <!-- السعر -->
+    <div class="w-1/2">
+      <label class="block text-gray-300 text-sm mb-1">السعر</label>
+      <div class="flex gap-1">
+        <input type="number" placeholder="من" class="w-1/2 p-1 rounded bg-gray-700 text-white text-sm">
+        <input type="number" placeholder="إلى" class="w-1/2 p-1 rounded bg-gray-700 text-white text-sm">
       </div>
     </div>
-    <div class="accountCard bg-gray-800 rounded-xl p-2 shadow-lg social">
-      <img src="https://via.placeholder.com/150" class="rounded-lg w-full">
-      <div class="mt-2">
-        <p class="text-sm font-semibold">حساب Instagram</p>
-        <p class="text-xs text-gray-400">ID: 67890</p>
-        <div class="mt-2 flex justify-between items-center">
-          <span class="text-blue-400 font-bold text-sm">$10.00</span>
-          <a href="https://t.me/seller_username" class="text-blue-500 text-xs underline">تواصل مع البائع</a>
-        </div>
-      </div>
-    </div>
-    <!-- Add more accounts with different categories -->
-  </div>  
+  </div>
+</div>
 
-  <!-- Upload Form -->
+<!-- الرئيسية -->
+<div id="mainContent" class="p-4 space-y-3">
+  <div class="bg-gray-800 p-3 rounded" onclick="viewDetails()">
+    <img src="https://via.placeholder.com/300x150" class="w-full rounded mb-2">
+    <h3 class="font-bold text-lg">اسم الحساب</h3>
+    <p class="text-sm text-gray-300">القسم: الألعاب | النوع: Free Fire | السعر: 10$</p>
+  </div>
+</div>
+
+<!-- رفع حساب -->
   <div id="uploadForm" class="hidden p-4">
     <h2 class="text-lg font-semibold mb-2">رفع حساب جديد</h2>
     <form class="space-y-3">
-      <input type="text" placeholder="اسم الحساب (مثال: حساب PUBG)" class="w-full p-2 rounded bg-gray-700 text-sm" />
-      <select class="w-full p-2 rounded bg-gray-700 text-sm" id="categorySelect" onchange="toggleCategoryFields()">
-        <option value="">اختر القسم</option>
-        <option value="games">ألعاب</option>
-        <option value="social">التواصل الاجتماعي</option>
-        <option value="streaming">بث وميديا</option>
+      <input type="text" placeholder="اسم الحساب" class="w-full p-2 rounded bg-gray-700 text-sm" />
+      <select class="w-full p-2 rounded bg-gray-700 text-sm">
+        <option>اختر القسم</option>
+        <option>ألعاب</option>
+        <option>التواصل الاجتماعي</option>
+        <option>بث وميديا</option>
       </select>
-      <div id="gameFields" class="hidden">
-        <select class="w-full p-2 rounded bg-gray-700 text-sm">
-          <option>PUBG</option>
-          <option>Free Fire</option>
-        </select>
-      </div>
-      <div id="socialFields" class="hidden">
-        <select class="w-full p-2 rounded bg-gray-700 text-sm">
-          <option>Instagram</option>
-          <option>Facebook</option>
-        </select>
-      </div>
-      <div id="streamingFields" class="hidden">
-        <select class="w-full p-2 rounded bg-gray-700 text-sm">
-          <option>Netflix</option>
-          <option>Spotify</option>
-        </select>
-      </div>
+      <select class="w-full p-2 rounded bg-gray-700 text-sm">
+        <option>نوع التطبيق</option>
+        <option>PUBG</option>
+        <option>Netflix</option>
+        <option>Facebook</option>
+      </select>
       <input type="number" placeholder="السعر المطلوب (دولار)" class="w-full p-2 rounded bg-gray-700 text-sm" />
       <input type="text" placeholder="رابط التواصل (يوزر تيليغرام)" class="w-full p-2 rounded bg-gray-700 text-sm" />
       <input type="file" class="w-full p-2 rounded bg-gray-700 text-sm" />
       <button class="w-full bg-blue-600 py-2 rounded text-white">نشر الحساب</button>
     </form>
-  </div>  
+  </div>
+  <!-- تفاصيل الحساب -->
+<div id="accountDetails" class="hidden p-4 space-y-3">
+  <img src="https://via.placeholder.com/400x200" class="w-full rounded-lg">
+  <h2 class="text-xl font-bold mt-2">اسم الحساب</h2>
+  <p class="text-sm text-gray-300">القسم: الألعاب</p>
+  <p class="text-sm text-gray-300">النوع: Free Fire</p>
+  <p class="text-sm text-gray-300">السعر: 10$</p>
+  <p class="text-sm text-gray-300">تاريخ النشر: 2025-04-07</p>
+  <div class="flex gap-2 mt-2">
+    <a href="https://t.me/username" class="bg-blue-600 px-4 py-2 rounded text-sm">تواصل مع البائع</a>
+    <button class="bg-green-600 px-4 py-2 rounded text-sm">تقديم عرض خاص</button>
+  </div>
+</div>
 
-  <!-- Bottom Nav -->
-  <div class="fixed bottom-0 left-0 w-full bg-gray-800 p-2 flex justify-around text-xs text-center">
-    <button class="flex flex-col items-center text-blue-400" onclick="showSection('market')">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/></svg>
+<!-- قسم حساباتي -->
+<div id="myAccounts" class="hidden p-4">
+  <h2 class="text-lg font-bold mb-3">حساباتي المعروضة</h2>
+  <div class="bg-gray-800 p-3 rounded mb-2">
+    <p class="font-semibold">حساب Free Fire</p>
+    <div class="flex justify-between mt-2 text-sm text-gray-400">
+      <span>السعر: 7$</span>
+      <button class="text-red-500">حذف</button>
+    </div>
+  </div>
+  
+  <!-- المزيد من الحسابات -->
+</div>
+
+<!-- الشريط السفلي -->
+<div class="fixed bottom-0 left-0 w-full bg-gray-800 text-white text-xs">
+  <div class="flex justify-around items-center p-2">
+    <button onclick="showSection('mainContent')" id="nav-main" class="flex flex-col items-center text-blue-400">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/></svg>
       <span>الرئيسية</span>
     </button>
-    <button class="flex flex-col items-center" onclick="showSection('uploadForm')">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+    <button onclick="showSection('uploadForm')" id="nav-upload" class="flex flex-col items-center">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
       <span>رفع حساب</span>
     </button>
-    <button class="flex flex-col items-center">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
-      <span>طلباتي</span>
+    <button onclick="showSection('myAccounts')" id="nav-my" class="flex flex-col items-center">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+      <span>حساباتي</span>
     </button>
-  </div>  
+  </div>
+</div>
 
-  <script>
-    // Toggle Filters visibility
-    function toggleFilters() {
-      const filters = document.getElementById("filters");
-      filters.classList.toggle("hidden");
+<!-- السكربت -->
+<script>
+  const sections = ['mainContent', 'uploadForm', 'accountDetails', 'myAccounts'];
+  const searchBar = document.getElementById("searchBar");
+  const filters = document.getElementById("filters");
+
+  function showSection(id) {
+    sections.forEach(sec => {
+      document.getElementById(sec).classList.add('hidden');
+    });
+    document.getElementById(id).classList.remove('hidden');
+
+    // إظهار / إخفاء البحث والفلترة
+    if (id === 'mainContent') {
+      searchBar.classList.remove('hidden');
+      filters.classList.remove('hidden');
+    } else {
+      searchBar.classList.add('hidden');
+      filters.classList.add('hidden');
     }
 
-    // Function to filter accounts by category
-    function filterByCategory() {
-      const category = document.getElementById("categoryFilter").value;
-      const allCards = document.querySelectorAll(".accountCard");
-      allCards.forEach(card => {
-        if (category === "" || card.classList.contains(category)) {
-          card.classList.remove("hidden");
-        } else {
-          card.classList.add("hidden");
-        }
-      });
-    }
+    // تغيير لون الأزرار
+    document.querySelectorAll('button[id^="nav-"]').forEach(btn => btn.classList.remove('text-blue-400'));
+    document.getElementById("nav-" + id.replace("Content", "").replace("uploadForm", "upload").replace("myAccounts", "my")).classList.add('text-blue-400');
+  }
 
-    // Function to filter accounts by app type
-    function filterByApp() {
-      const app = document.getElementById("appFilter").value;
-      const allCards = document.querySelectorAll(".accountCard");
-      allCards.forEach(card => {
-        if (app === "" || card.querySelector("p").textContent.includes(app)) {
-          card.classList.remove("hidden");
-        } else {
-          card.classList.add("hidden");
-        }
-      });
-    }
+  function toggleAppFilter() {
+    const category = document.getElementById('categoryFilter').value;
+    const appFilter = document.getElementById('appTypeFilter');
+    appFilter.classList.toggle('hidden', category === '');
+  }
 
-    // Function to filter accounts by search input
-    function filterAccounts() {
-      const searchInput = document.getElementById("searchInput").value.toLowerCase();
-      const accounts = document.querySelectorAll(".accountCard");
-      accounts.forEach(account => {
-        const accountName = account.querySelector("p").textContent.toLowerCase();
-        if (accountName.includes(searchInput)) {
-          account.classList.remove("hidden");
-        } else {
-          account.classList.add("hidden");
-        }
-      });
-    }
+  function viewDetails() {
+    showSection('accountDetails');
+  }
+</script>
 
-    // Show or hide fields based on category selection in upload form
-    function toggleCategoryFields() {
-      const category = document.getElementById("categorySelect").value;
-      document.getElementById("gameFields").classList.add("hidden");
-      document.getElementById("socialFields").classList.add("hidden");
-      document.getElementById("streamingFields").classList.add("hidden");
-
-      if (category === "games") {
-        document.getElementById("gameFields").classList.remove("hidden");
-      } else if (category === "social") {
-        document.getElementById("socialFields").classList.remove("hidden");
-      } else if (category === "streaming") {
-        document.getElementById("streamingFields").classList.remove("hidden");
-      }
-    }
-
-    // Function to show specific sections
-    function showSection(id) {
-      document.getElementById("uploadForm").classList.add("hidden");
-      document.getElementById("accountsGrid").classList.remove("hidden");
-      if (id === 'uploadForm') {
-        document.getElementById("accountsGrid").classList.add("hidden");
-        document.getElementById("uploadForm").classList.remove("hidden");
-      }
-    }
-  </script>
 </body>
   </html>
