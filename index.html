@@ -506,7 +506,7 @@
 
     // عرض تفاصيل الحساب
     function showDetails(acc) {
-      currentAccountKey = acc.key;
+      window.currentAccountKey = acc.key;
       document.getElementById("detailsImage").src = acc.image || "https://via.placeholder.com/400x200?text=No+Image";
       document.getElementById("detailsName").innerText = acc.name;
       document.getElementById("detailsCategory").innerText = `القسم: ${acc.category}`;
@@ -521,10 +521,18 @@
       
       // إظهار زر الحذف للمالك فقط
       const deleteButton = document.getElementById("deleteAccountButton");
-      if (currentUser && acc.userId === currentUser.uid) {
+      if (window.currentUser && acc.userId === window.currentUser.uid) {
         deleteButton.classList.remove("hidden");
       } else {
         deleteButton.classList.add("hidden");
+      }
+
+      // إظهار زر إنشاء تذكرة فقط عندما لا يكون المستخدم هو البائع
+      const ticketButton = document.getElementById("createTicketButton");
+      if (window.currentUser && acc.userId !== window.currentUser.uid) {
+        ticketButton.classList.remove("hidden");
+      } else {
+        ticketButton.classList.add("hidden");
       }
       
       // رابط التواصل
@@ -532,6 +540,9 @@
       
       showSection('accountDetails');
     }
+    
+    // ربط الدالة بكائن window للوصول إليها عالميًا
+    window.showDetails = showDetails;
 
     // حذف حساب
     function deleteAccountPrompt(key) {
@@ -578,4 +589,4 @@
     fetchAccounts();
   </script>
 </body>
-</html>
+          </html>
