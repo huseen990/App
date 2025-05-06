@@ -5,10 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>متجر الحسابات</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <!-- Firebase SDK (Modular v9) -->
+  <script type="module">
+    // Import the functions you need from the SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getDatabase, ref, push, onValue, remove, query, orderByChild, equalTo, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+    
+    // Make Firebase services available globally
+    window.firebaseServices = {};
+  </script>
 </head>
 <body class="bg-gray-900 text-white">
   <!-- Header -->
@@ -155,7 +161,12 @@
   </div>
 
   <!-- السكربت -->
-  <script>
+  <script type="module">
+    // Import the functions from Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getDatabase, ref, push, onValue, remove, query, orderByChild, equalTo, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+    
     // إعداد firebaseConfig
     const firebaseConfig = {
       apiKey: "AIzaSyB8Ss0MTl-LdAz8qSqufAYApjxEzHlzamc",
@@ -168,42 +179,63 @@
     };
 
     // تهيئة Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    const auth = firebase.auth();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
     
-    // متغيرات عامة
-    const sections = ['mainContent', 'uploadForm', 'accountDetails', 'myAccountsSection'];
-    const searchBar = document.getElementById("searchBar");
-    const filters = document.getElementById("filters");
-    let accounts = [];
-    let currentUser = null;
-    let currentAccountKey = null;
+    // توفير خدمات Firebase للنوافذ العالمية لاستخدامها في دوال أخرى
+    window.firebaseServices = {
+      auth,
+      db,
+      ref,
+      push,
+      onValue,
+      remove,
+      query,
+      orderByChild,
+      equalTo,
+      get,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut
+    };
+    
+    // متغيرات عامة للنافذة
+    window.accounts = [];
+    window.currentUser = null;
+    window.currentAccountKey = null;
 
     // استمع لتغيير حالة تسجيل الدخول
-    auth.onAuthStateChanged(function(user) {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         // المستخدم مسجل دخول
-        currentUser = user;
+        window.currentUser = user;
         document.getElementById("userInfo").classList.remove("hidden");
         document.getElementById("userName").textContent = user.displayName;
         document.getElementById("userAvatar").src = user.photoURL;
         document.getElementById("authButton").textContent = "تسجيل الخروج";
-        fetchAccounts();
+        window.fetchAccounts();
       } else {
         // المستخدم غير مسجل
-        currentUser = null;
+        window.currentUser = null;
         document.getElementById("userInfo").classList.add("hidden");
         document.getElementById("authButton").textContent = "تسجيل الدخول";
-        fetchAccounts();
+        window.fetchAccounts();
       }
     });
+  </script>
+
+  <script>
+    // متغيرات عامة
+    const sections = ['mainContent', 'uploadForm', 'accountDetails', 'myAccountsSection'];
+    const searchBar = document.getElementById("searchBar");
+    const filters = document.getElementById("filters");
 
     // وظائف التسجيل
     function handleAuth() {
-      if (currentUser) {
+      if (window.currentUser) {
         // تسجيل الخروج
-        auth.signOut().then(() => {
+        window.firebaseServices.signOut(window.firebaseServices.auth).then(() => {
           console.log("تم تسجيل الخروج بنجاح");
           showSection('mainContent');
         }).catch((error) => {
@@ -216,8 +248,8 @@
     }
 
     function signInWithGoogle() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider).then((result) => {
+      const provider = new window.firebaseServices.GoogleAuthProvider();
+      window.firebaseServices.signInWithPopup(window.firebaseServices.auth, provider).then((result) => {
         closeAuthSection();
         console.log("تم تسجيل الدخول بنجاح:", result.user.displayName);
       }).catch((error) => {
@@ -230,7 +262,7 @@
     }
 
     function requireAuth(sectionId) {
-      if (currentUser) {
+      if (window.currentUser) {
         if (sectionId === 'myAccountsSection') {
           loadMyAccounts();
         }
@@ -263,6 +295,13 @@
       const navId = navMap[id];
       if (navId) document.getElementById("nav-" + navId).classList.add('text-blue-400');
     }
+    
+    // ربط الدوال بكائن window للوصول إليها عالميًا
+    window.showSection = showSection;
+    window.requireAuth = requireAuth;
+    window.handleAuth = handleAuth;
+    window.signInWithGoogle = signInWithGoogle;
+    window.closeAuthSection = closeAuthSection;
 
     // تحديث أنواع الحسابات بناءً على القسم
     function updateAccountTypes() {
@@ -303,7 +342,7 @@
       const max = parseFloat(document.getElementById("priceMax").value) || Infinity;
       const sort = document.getElementById("sortSelect").value;
 
-      let filtered = accounts.filter(acc => {
+      let filtered = window.accounts.filter(acc => {
         return (
           acc.name.toLowerCase().includes(search) &&
           (cat === "" || acc.category === cat) &&
@@ -318,17 +357,23 @@
 
       renderAccounts(filtered);
     }
+    
+    // ربط الدوال بكائن window للوصول إليها عالميًا
+    window.updateAccountTypes = updateAccountTypes;
+    window.toggleAppFilter = toggleAppFilter;
+    window.applyFilters = applyFilters;
 
     // جلب الحسابات
     function fetchAccounts() {
-      db.ref("accounts").once("value", (snapshot) => {
-        accounts = [];
+      const accountsRef = window.firebaseServices.ref(window.firebaseServices.db, "accounts");
+      window.firebaseServices.onValue(accountsRef, (snapshot) => {
+        window.accounts = [];
         snapshot.forEach(child => {
           const account = child.val();
           account.key = child.key;
-          accounts.push(account);
+          window.accounts.push(account);
         });
-        renderAccounts(accounts);
+        renderAccounts(window.accounts);
       });
     }
 
@@ -362,12 +407,23 @@
         container.appendChild(div);
       });
     }
+    
+    // ربط الدوال بكائن window للوصول إليها عالميًا
+    window.fetchAccounts = fetchAccounts;
+    window.renderAccounts = renderAccounts;
 
     // عرض حساباتي
     function loadMyAccounts() {
-      if (!currentUser) return;
+      if (!window.currentUser) return;
       
-      db.ref("accounts").orderByChild("userId").equalTo(currentUser.uid).once("value", (snapshot) => {
+      const accountsRef = window.firebaseServices.ref(window.firebaseServices.db, "accounts");
+      const userAccountsQuery = window.firebaseServices.query(
+        accountsRef, 
+        window.firebaseServices.orderByChild("userId"), 
+        window.firebaseServices.equalTo(window.currentUser.uid)
+      );
+      
+      window.firebaseServices.get(userAccountsQuery).then((snapshot) => {
         const myAccounts = [];
         snapshot.forEach(child => {
           const account = child.val();
@@ -401,14 +457,17 @@
               <p class="text-sm text-green-400">${acc.price}$</p>
             </div>
             <div class="flex flex-col gap-2">
-              <button onclick="event.stopPropagation(); showDetails(${JSON.stringify(acc).replace(/"/g, '&quot;')});" class="bg-blue-600 px-3 py-1 rounded text-xs">عرض</button>
-              <button onclick="event.stopPropagation(); deleteAccountPrompt('${acc.key}');" class="bg-red-600 px-3 py-1 rounded text-xs">حذف</button>
+              <button onclick="event.stopPropagation(); window.showDetails(${JSON.stringify(acc).replace(/"/g, '&quot;')});" class="bg-blue-600 px-3 py-1 rounded text-xs">عرض</button>
+              <button onclick="event.stopPropagation(); window.deleteAccountPrompt('${acc.key}');" class="bg-red-600 px-3 py-1 rounded text-xs">حذف</button>
             </div>
           `;
           container.appendChild(div);
         });
       });
     }
+    
+    // ربط الدالة بكائن window للوصول إليها عالميًا
+    window.loadMyAccounts = loadMyAccounts;
 
     // إضافة حساب جديد
     function submitAccount(event) {
