@@ -519,6 +519,10 @@
       document.getElementById("sellerAvatar").src = acc.userPhotoURL || "https://via.placeholder.com/50x50?text=?";
       document.getElementById("sellerName").innerText = acc.userDisplayName || "بائع مجهول";
       
+      // تخزين معلومات البائع للتذاكر
+      window.currentSellerID = acc.userId;
+      window.currentSellerName = acc.userDisplayName || "بائع مجهول";
+      
       // إظهار زر الحذف للمالك فقط
       const deleteButton = document.getElementById("deleteAccountButton");
       if (window.currentUser && acc.userId === window.currentUser.uid) {
@@ -526,13 +530,15 @@
       } else {
         deleteButton.classList.add("hidden");
       }
-
-      // إظهار زر إنشاء تذكرة فقط عندما لا يكون المستخدم هو البائع
-      const ticketButton = document.getElementById("createTicketButton");
+      
+      // إظهار زر فتح تذكرة فقط إذا كان المشتري غير البائع
+      const openTicketButton = document.getElementById("offerButton");
       if (window.currentUser && acc.userId !== window.currentUser.uid) {
-        ticketButton.classList.remove("hidden");
+        openTicketButton.innerText = "فتح تذكرة";
+        openTicketButton.onclick = () => showTicketForm(acc.key, acc.userId, acc.name);
       } else {
-        ticketButton.classList.add("hidden");
+        openTicketButton.innerText = "تقديم عرض خاص";
+        openTicketButton.onclick = null;
       }
       
       // رابط التواصل
@@ -542,7 +548,17 @@
     }
     
     // ربط الدالة بكائن window للوصول إليها عالميًا
-    window.showDetails = showDetails;
+    window.showDetails = showDetails;d === currentUser.uid) {
+        deleteButton.classList.remove("hidden");
+      } else {
+        deleteButton.classList.add("hidden");
+      }
+      
+      // رابط التواصل
+      document.getElementById("detailsContact").href = `https://t.me/${acc.contact.replace('@', '')}`;
+      
+      showSection('accountDetails');
+    }
 
     // حذف حساب
     function deleteAccountPrompt(key) {
@@ -589,4 +605,4 @@
     fetchAccounts();
   </script>
 </body>
-          </html>
+</html>
