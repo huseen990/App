@@ -100,24 +100,7 @@
       </select>
       <input type="number" id="accountPrice" placeholder="السعر بالدولار" class="w-full p-2 rounded bg-gray-700 text-sm" required />
       <input type="text" id="accountContact" placeholder="يوزر تيليغرام للتواصل" class="w-full p-2 rounded bg-gray-700 text-sm" required />
-      
-      <!-- رفع الصورة من الملفات -->
-      <div class="space-y-2">
-        <label class="block text-gray-300 text-sm">صورة الحساب</label>
-        <div class="flex gap-2">
-          <input type="file" id="accountImageFile" accept="image/*" class="hidden" />
-          <button type="button" onclick="document.getElementById('accountImageFile').click()" class="bg-gray-600 px-4 py-2 rounded text-sm">اختر صورة</button>
-          <button type="button" onclick="uploadAccountImage()" class="bg-blue-600 px-4 py-2 rounded text-sm">رفع الصورة</button>
-        </div>
-        <div id="uploadProgress" class="hidden text-center p-2 text-blue-300">
-          جاري رفع الصورة...
-        </div>
-        <div id="imagePreviewContainer" class="hidden mt-2">
-          <img id="imagePreview" class="w-full max-h-40 object-contain rounded" alt="معاينة الصورة" />
-        </div>
-        <input type="url" id="accountImage" placeholder="رابط صورة الحساب (سيتم ملؤه تلقائيًا بعد رفع الصورة)" class="w-full p-2 rounded bg-gray-700 text-sm" required />
-      </div>
-      
+      <input type="url" id="accountImage" placeholder="رابط صورة الحساب" class="w-full p-2 rounded bg-gray-700 text-sm" required />
       <textarea id="accountDescription" placeholder="وصف الحساب (اختياري)" class="w-full p-2 rounded bg-gray-700 text-sm h-24"></textarea>
       <button class="w-full bg-blue-600 py-2 rounded text-white">نشر الحساب</button>
     </form>
@@ -141,7 +124,7 @@
     </div>
     <div class="flex gap-2 mt-2">
       <a id="detailsContact" target="_blank" class="bg-blue-600 px-4 py-2 rounded text-sm">تواصل مع البائع</a>
-      <button id="startTicketButton" class="bg-green-600 px-4 py-2 rounded text-sm">فتح تذكرة</button>
+      <button id="offerButton" class="bg-green-600 px-4 py-2 rounded text-sm">تقديم عرض خاص</button>
       <button onclick="showSection('mainContent')" class="bg-gray-700 px-4 py-2 rounded text-sm">رجوع</button>
     </div>
     <div id="deleteAccountButton" class="hidden mt-2">
@@ -156,53 +139,6 @@
     <div id="noAccountsMessage" class="hidden text-center p-4">
       <p class="text-gray-400">لم تقم بنشر أي حسابات بعد</p>
       <button onclick="showSection('uploadForm')" class="mt-2 bg-blue-600 px-4 py-2 rounded text-sm">نشر حساب جديد</button>
-    </div>
-  </div>
-  
-  <!-- قسم التذاكر -->
-  <div id="ticketsSection" class="hidden p-4">
-    <h2 class="text-lg font-semibold mb-4">تذاكر الدعم والتواصل</h2>
-    <div id="ticketsList" class="space-y-3"></div>
-  </div>
-  
-  <!-- تفاصيل التذكرة -->
-  <div id="ticketDetails" class="hidden p-4 flex flex-col h-full">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h2 id="ticketTitle" class="text-lg font-semibold"></h2>
-        <div id="ticketStatus" class="mt-1"></div>
-      </div>
-      <button onclick="showSection('ticketsSection')" class="bg-gray-700 px-4 py-2 rounded text-sm">العودة للقائمة</button>
-    </div>
-    
-    <div class="flex gap-2 mb-4">
-      <button id="requestAdminButton" class="bg-purple-600 px-4 py-2 rounded text-sm">طلب وسيط</button>
-      <button id="closeTicketButton" class="bg-red-600 px-4 py-2 rounded text-sm">إغلاق التذكرة</button>
-    </div>
-    
-    <!-- محتوى المحادثة -->
-    <div id="ticketMessages" class="flex-1 overflow-y-auto bg-gray-900 p-4 rounded mb-4 space-y-2 min-h-[300px] max-h-[400px]"></div>
-    
-    <!-- نموذج إرسال الرسائل -->
-    <div class="bg-gray-800 p-3 rounded">
-      <!-- معاينة الملف المحدد -->
-      <div id="selectedFileContainer" class="mb-2">
-        <div id="selectedFileName" class="text-sm text-gray-400"></div>
-        <img id="selectedFilePreview" class="hidden max-h-32 object-contain rounded mt-1" alt="معاينة الملف" />
-      </div>
-      
-      <div class="flex gap-2">
-        <div class="flex-1">
-          <input type="text" id="ticketMessageInput" placeholder="اكتب رسالتك هنا..." class="w-full p-2 rounded bg-gray-700 text-sm" />
-        </div>
-        <label for="ticketFileInput" class="bg-gray-600 px-3 py-2 rounded cursor-pointer">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-          <input type="file" id="ticketFileInput" accept="image/*" class="hidden" />
-        </label>
-        <button id="sendTicketMessageButton" onclick="sendTicketMessage()" class="bg-blue-600 px-3 py-2 rounded">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
-        </button>
-      </div>
     </div>
   </div>
 
@@ -220,10 +156,6 @@
       <button onclick="requireAuth('myAccountsSection')" id="nav-myaccounts" class="flex flex-col items-center">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
         <span>حساباتي</span>
-      </button>
-      <button onclick="requireAuth('ticketsSection'); window.loadTickets();" id="nav-tickets" class="flex flex-col items-center">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-        <span>التذاكر</span>
       </button>
     </div>
   </div>
@@ -637,4 +569,575 @@
     fetchAccounts();
   </script>
 </body>
-                             </html>
+  </html><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>متجر الحسابات</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase SDK (Modular v9) -->
+  <script type="module">
+    // Import the functions you need from the SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getDatabase, ref, push, onValue, remove, query, orderByChild, equalTo, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+    
+    // Make Firebase services available globally
+    window.firebaseServices = {};
+  </script>
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- Header -->
+  <div class="p-4 flex items-center justify-between bg-gray-800 shadow">
+    <h1 class="text-xl font-bold">متجر الحسابات</h1>
+    <div class="flex gap-2">
+      <div id="userInfo" class="hidden">
+        <span id="userName" class="text-sm ml-2"></span>
+        <img id="userAvatar" class="w-8 h-8 rounded-full" src="" alt="صورة المستخدم">
+      </div>
+      <button id="authButton" onclick="handleAuth()" class="bg-blue-600 px-4 py-2 rounded text-sm">تسجيل الدخول</button>
+      <button id="supportButton" class="bg-green-600 px-4 py-2 rounded text-sm">تواصل مع الدعم</button>
+    </div>
+  </div>
+
+  <!-- شريط البحث -->
+  <div id="searchBar" class="px-4 pt-2 pb-1">
+    <input oninput="applyFilters()" type="text" id="searchInput" placeholder="ابحث عن حساب..." class="w-full p-2 rounded bg-gray-800 text-white placeholder-gray-500">
+  </div>
+
+  <!-- الفلاتر -->
+  <div id="filters" class="px-4 pt-1 pb-3 space-y-2">
+    <select id="categoryFilter" onchange="toggleAppFilter(); applyFilters()" class="w-full p-2 rounded bg-gray-800 text-white">
+      <option value="">اختر القسم</option>
+      <option>قسم الألعاب</option>
+      <option>قسم التطبيقات</option>
+    </select>
+
+    <select id="appTypeFilter" onchange="applyFilters()" class="w-full p-2 rounded bg-gray-800 text-white hidden">
+      <option>TikTok</option>
+      <option>Instagram</option>
+      <option>Free Fire</option>
+    </select>
+
+    <div class="flex justify-between gap-2">
+      <select id="sortSelect" onchange="applyFilters()" class="w-1/2 p-2 rounded bg-gray-800 text-white">
+        <option value="latest">الأحدث</option>
+        <option value="cheapest">الأرخص</option>
+        <option value="expensive">الأغلى</option>
+      </select>
+
+      <!-- السعر -->
+      <div class="w-1/2">
+        <label class="block text-gray-300 text-sm mb-1">السعر</label>
+        <div class="flex gap-1">
+          <input type="number" id="priceMin" oninput="applyFilters()" placeholder="من" class="w-1/2 p-1 rounded bg-gray-700 text-white text-sm">
+          <input type="number" id="priceMax" oninput="applyFilters()" placeholder="إلى" class="w-1/2 p-1 rounded bg-gray-700 text-white text-sm">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- الرئيسية (ستُملأ تلقائيًا) -->
+  <div id="mainContent" class="p-4 space-y-3"></div>
+
+  <!-- قسم التسجيل -->
+  <div id="authSection" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-10">
+    <div class="bg-gray-800 p-6 rounded-lg w-11/12 max-w-md">
+      <h2 class="text-xl font-bold mb-4">تسجيل الدخول</h2>
+      <p class="text-gray-300 mb-4">تسجيل الدخول لعرض حساباتك ونشر حسابات جديدة</p>
+      <button onclick="signInWithGoogle()" class="w-full bg-white text-gray-900 py-2 rounded mb-4 flex items-center justify-center">
+        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" class="w-6 h-6 ml-2">
+        <span>تسجيل الدخول بحساب Google</span>
+      </button>
+      <button onclick="closeAuthSection()" class="w-full bg-gray-700 py-2 rounded">إلغاء</button>
+    </div>
+  </div>
+
+  <!-- رفع حساب -->
+  <div id="uploadForm" class="hidden p-4">
+    <h2 class="text-lg font-semibold mb-2">رفع حساب جديد</h2>
+    <form onsubmit="submitAccount(event)" class="space-y-3">
+      <input type="text" id="accountName" placeholder="اسم الحساب" class="w-full p-2 rounded bg-gray-700 text-sm" required />
+      <select id="accountCategory" onchange="updateAccountTypes()" class="w-full p-2 rounded bg-gray-700 text-sm" required>
+        <option>قسم الألعاب</option>
+        <option>قسم التطبيقات</option>
+      </select>
+      <select id="accountType" class="w-full p-2 rounded bg-gray-700 text-sm" required>
+        <option>PUBG</option>
+        <option>Free Fire</option>
+        <option>Fortnite</option>
+        <option>Call of Duty Mobile</option>
+      </select>
+      <input type="number" id="accountPrice" placeholder="السعر بالدولار" class="w-full p-2 rounded bg-gray-700 text-sm" required />
+      <input type="text" id="accountContact" placeholder="يوزر تيليغرام للتواصل" class="w-full p-2 rounded bg-gray-700 text-sm" required />
+      <input type="url" id="accountImage" placeholder="رابط صورة الحساب" class="w-full p-2 rounded bg-gray-700 text-sm" required />
+      <textarea id="accountDescription" placeholder="وصف الحساب (اختياري)" class="w-full p-2 rounded bg-gray-700 text-sm h-24"></textarea>
+      <button class="w-full bg-blue-600 py-2 rounded text-white">نشر الحساب</button>
+    </form>
+  </div>
+
+  <!-- تفاصيل الحساب -->
+  <div id="accountDetails" class="hidden p-4 space-y-3">
+    <img id="detailsImage" src="" class="w-full rounded-lg">
+    <h2 id="detailsName" class="text-xl font-bold mt-2"></h2>
+    <p id="detailsCategory" class="text-sm text-gray-300"></p>
+    <p id="detailsType" class="text-sm text-gray-300"></p>
+    <p id="detailsPrice" class="text-sm text-gray-300"></p>
+    <p id="detailsDate" class="text-sm text-gray-300"></p>
+    <p id="detailsDescription" class="text-sm text-gray-300 mt-2 p-3 bg-gray-700 rounded"></p>
+    <div id="detailsSellerInfo" class="mt-2 p-3 bg-gray-800 rounded flex items-center">
+      <img id="sellerAvatar" class="w-10 h-10 rounded-full ml-2" src="" alt="صورة البائع">
+      <div>
+        <div id="sellerName" class="font-semibold"></div>
+        <div id="sellerRating" class="text-yellow-400 text-xs"></div>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-2">
+      <a id="detailsContact" target="_blank" class="bg-blue-600 px-4 py-2 rounded text-sm">تواصل مع البائع</a>
+      <button id="offerButton" class="bg-green-600 px-4 py-2 rounded text-sm">تقديم عرض خاص</button>
+      <button onclick="showSection('mainContent')" class="bg-gray-700 px-4 py-2 rounded text-sm">رجوع</button>
+    </div>
+    <div id="deleteAccountButton" class="hidden mt-2">
+      <button onclick="deleteAccount()" class="w-full bg-red-600 px-4 py-2 rounded text-sm">حذف الحساب</button>
+    </div>
+  </div>
+
+  <!-- حساباتي -->
+  <div id="myAccountsSection" class="hidden p-4">
+    <h2 class="text-lg font-semibold mb-4">حساباتي المنشورة</h2>
+    <div id="myAccountsList" class="space-y-3"></div>
+    <div id="noAccountsMessage" class="hidden text-center p-4">
+      <p class="text-gray-400">لم تقم بنشر أي حسابات بعد</p>
+      <button onclick="showSection('uploadForm')" class="mt-2 bg-blue-600 px-4 py-2 rounded text-sm">نشر حساب جديد</button>
+    </div>
+  </div>
+
+  <!-- الشريط السفلي -->
+  <div class="fixed bottom-0 left-0 w-full bg-gray-800 text-white text-xs">
+    <div class="flex justify-around items-center p-2">
+      <button onclick="showSection('mainContent')" id="nav-main" class="flex flex-col items-center text-blue-400">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/></svg>
+        <span>الرئيسية</span>
+      </button>
+      <button onclick="requireAuth('uploadForm')" id="nav-upload" class="flex flex-col items-center">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+        <span>رفع حساب</span>
+      </button>
+      <button onclick="requireAuth('myAccountsSection')" id="nav-myaccounts" class="flex flex-col items-center">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <span>حساباتي</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- السكربت -->
+  <script type="module">
+    // Import the functions from Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getDatabase, ref, push, onValue, remove, query, orderByChild, equalTo, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+    
+    // إعداد firebaseConfig
+    const firebaseConfig = {
+      apiKey: "AIzaSyB8Ss0MTl-LdAz8qSqufAYApjxEzHlzamc",
+      authDomain: "account-store-b0990.firebaseapp.com",
+      databaseURL: "https://account-store-b0990-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "account-store-b0990",
+      storageBucket: "account-store-b0990.firebasestorage.app",
+      messagingSenderId: "849280224042",
+      appId: "1:849280224042:web:86003d40172e44b8822c53"
+    };
+
+    // تهيئة Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+    
+    // توفير خدمات Firebase للنوافذ العالمية لاستخدامها في دوال أخرى
+    window.firebaseServices = {
+      auth,
+      db,
+      ref,
+      push,
+      onValue,
+      remove,
+      query,
+      orderByChild,
+      equalTo,
+      get,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut
+    };
+    
+    // متغيرات عامة للنافذة
+    window.accounts = [];
+    window.currentUser = null;
+    window.currentAccountKey = null;
+
+    // استمع لتغيير حالة تسجيل الدخول
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // المستخدم مسجل دخول
+        window.currentUser = user;
+        document.getElementById("userInfo").classList.remove("hidden");
+        document.getElementById("userName").textContent = user.displayName;
+        document.getElementById("userAvatar").src = user.photoURL;
+        document.getElementById("authButton").textContent = "تسجيل الخروج";
+        window.fetchAccounts();
+      } else {
+        // المستخدم غير مسجل
+        window.currentUser = null;
+        document.getElementById("userInfo").classList.add("hidden");
+        document.getElementById("authButton").textContent = "تسجيل الدخول";
+        window.fetchAccounts();
+      }
+    });
+  </script>
+
+  <script>
+    // متغيرات عامة
+    const sections = ['mainContent', 'uploadForm', 'accountDetails', 'myAccountsSection'];
+    const searchBar = document.getElementById("searchBar");
+    const filters = document.getElementById("filters");
+
+    // وظائف التسجيل
+    function handleAuth() {
+      if (window.currentUser) {
+        // تسجيل الخروج
+        window.firebaseServices.signOut(window.firebaseServices.auth).then(() => {
+          console.log("تم تسجيل الخروج بنجاح");
+          showSection('mainContent');
+        }).catch((error) => {
+          console.error("خطأ في تسجيل الخروج:", error);
+        });
+      } else {
+        // إظهار قسم تسجيل الدخول
+        document.getElementById("authSection").classList.remove("hidden");
+      }
+    }
+
+    function signInWithGoogle() {
+      const provider = new window.firebaseServices.GoogleAuthProvider();
+      window.firebaseServices.signInWithPopup(window.firebaseServices.auth, provider).then((result) => {
+        closeAuthSection();
+        console.log("تم تسجيل الدخول بنجاح:", result.user.displayName);
+      }).catch((error) => {
+        console.error("خطأ في تسجيل الدخول:", error);
+      });
+    }
+
+    function closeAuthSection() {
+      document.getElementById("authSection").classList.add("hidden");
+    }
+
+    function requireAuth(sectionId) {
+      if (window.currentUser) {
+        if (sectionId === 'myAccountsSection') {
+          loadMyAccounts();
+        }
+        showSection(sectionId);
+      } else {
+        document.getElementById("authSection").classList.remove("hidden");
+      }
+    }
+
+    // وظائف التنقل بين الأقسام
+    function showSection(id) {
+      sections.forEach(sec => document.getElementById(sec).classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      
+      if (id === 'mainContent') {
+        searchBar.classList.remove('hidden');
+        filters.classList.remove('hidden');
+      } else {
+        searchBar.classList.add('hidden');
+        filters.classList.add('hidden');
+      }
+      
+      document.querySelectorAll('button[id^="nav-"]').forEach(btn => btn.classList.remove('text-blue-400'));
+      const navMap = {
+        'mainContent': 'main',
+        'uploadForm': 'upload',
+        'myAccountsSection': 'myaccounts'
+      };
+      
+      const navId = navMap[id];
+      if (navId) document.getElementById("nav-" + navId).classList.add('text-blue-400');
+    }
+    
+    // ربط الدوال بكائن window للوصول إليها عالميًا
+    window.showSection = showSection;
+    window.requireAuth = requireAuth;
+    window.handleAuth = handleAuth;
+    window.signInWithGoogle = signInWithGoogle;
+    window.closeAuthSection = closeAuthSection;
+
+    // تحديث أنواع الحسابات بناءً على القسم
+    function updateAccountTypes() {
+      const category = document.getElementById('accountCategory').value;
+      const typeSelect = document.getElementById('accountType');
+      typeSelect.innerHTML = '';
+      
+      if (category === 'قسم الألعاب') {
+        const gameTypes = ['PUBG', 'Free Fire', 'Fortnite', 'Call of Duty Mobile', 'Valorant', 'League of Legends'];
+        gameTypes.forEach(game => {
+          const option = document.createElement('option');
+          option.textContent = game;
+          typeSelect.appendChild(option);
+        });
+      } else {
+        const appTypes = ['TikTok', 'Instagram', 'Netflix', 'Snapchat', 'Spotify', 'YouTube Premium'];
+        appTypes.forEach(app => {
+          const option = document.createElement('option');
+          option.textContent = app;
+          typeSelect.appendChild(option);
+        });
+      }
+    }
+
+    // تبديل فلتر التطبيقات
+    function toggleAppFilter() {
+      const category = document.getElementById('categoryFilter').value;
+      const appFilter = document.getElementById('appTypeFilter');
+      appFilter.classList.toggle('hidden', category === '');
+    }
+
+    // تطبيق الفلاتر
+    function applyFilters() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const cat = document.getElementById("categoryFilter").value;
+      const type = document.getElementById("appTypeFilter").value;
+      const min = parseFloat(document.getElementById("priceMin").value) || 0;
+      const max = parseFloat(document.getElementById("priceMax").value) || Infinity;
+      const sort = document.getElementById("sortSelect").value;
+
+      let filtered = window.accounts.filter(acc => {
+        return (
+          acc.name.toLowerCase().includes(search) &&
+          (cat === "" || acc.category === cat) &&
+          (document.getElementById('appTypeFilter').classList.contains('hidden') || acc.type === type) &&
+          acc.price >= min && acc.price <= max
+        );
+      });
+
+      if (sort === "cheapest") filtered.sort((a, b) => a.price - b.price);
+      else if (sort === "expensive") filtered.sort((a, b) => b.price - a.price);
+      else filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      renderAccounts(filtered);
+    }
+    
+    // ربط الدوال بكائن window للوصول إليها عالميًا
+    window.updateAccountTypes = updateAccountTypes;
+    window.toggleAppFilter = toggleAppFilter;
+    window.applyFilters = applyFilters;
+
+    // جلب الحسابات
+    function fetchAccounts() {
+      const accountsRef = window.firebaseServices.ref(window.firebaseServices.db, "accounts");
+      window.firebaseServices.onValue(accountsRef, (snapshot) => {
+        window.accounts = [];
+        snapshot.forEach(child => {
+          const account = child.val();
+          account.key = child.key;
+          window.accounts.push(account);
+        });
+        renderAccounts(window.accounts);
+      });
+    }
+
+    // عرض الحسابات في الصفحة الرئيسية
+    function renderAccounts(list) {
+      const container = document.getElementById("mainContent");
+      container.innerHTML = '';
+      
+      if (list.length === 0) {
+        container.innerHTML = '<div class="text-center p-4 text-gray-400">لا توجد حسابات متاحة</div>';
+        return;
+      }
+      
+      list.forEach((acc) => {
+        const div = document.createElement("div");
+        div.className = "bg-gray-800 p-3 rounded cursor-pointer";
+        div.onclick = () => showDetails(acc);
+        
+        // صورة افتراضية إذا لم تكن متوفرة
+        const imageUrl = acc.image || "https://via.placeholder.com/300x150?text=No+Image";
+        
+        div.innerHTML = `
+          <img src="${imageUrl}" class="w-full h-36 object-cover rounded mb-2" onerror="this.src='https://via.placeholder.com/300x150?text=Error'">
+          <h3 class="font-bold text-lg">${acc.name}</h3>
+          <p class="text-sm text-gray-300">القسم: ${acc.category} | النوع: ${acc.type}</p>
+          <div class="flex justify-between items-center mt-2">
+            <span class="text-lg font-bold text-green-400">${acc.price}$</span>
+            <span class="text-xs text-gray-400">${formatDate(acc.date)}</span>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+    
+    // ربط الدوال بكائن window للوصول إليها عالميًا
+    window.fetchAccounts = fetchAccounts;
+    window.renderAccounts = renderAccounts;
+
+    // عرض حساباتي
+    function loadMyAccounts() {
+      if (!window.currentUser) return;
+      
+      const accountsRef = window.firebaseServices.ref(window.firebaseServices.db, "accounts");
+      const userAccountsQuery = window.firebaseServices.query(
+        accountsRef, 
+        window.firebaseServices.orderByChild("userId"), 
+        window.firebaseServices.equalTo(window.currentUser.uid)
+      );
+      
+      window.firebaseServices.get(userAccountsQuery).then((snapshot) => {
+        const myAccounts = [];
+        snapshot.forEach(child => {
+          const account = child.val();
+          account.key = child.key;
+          myAccounts.push(account);
+        });
+        
+        const container = document.getElementById("myAccountsList");
+        const noAccountsMsg = document.getElementById("noAccountsMessage");
+        
+        container.innerHTML = '';
+        
+        if (myAccounts.length === 0) {
+          noAccountsMsg.classList.remove("hidden");
+          return;
+        }
+        
+        noAccountsMsg.classList.add("hidden");
+        
+        myAccounts.forEach((acc) => {
+          const div = document.createElement("div");
+          div.className = "bg-gray-800 p-3 rounded flex items-center";
+          
+          const imageUrl = acc.image || "https://via.placeholder.com/300x150?text=No+Image";
+          
+          div.innerHTML = `
+            <img src="${imageUrl}" class="w-20 h-20 object-cover rounded ml-3" onerror="this.src='https://via.placeholder.com/300x150?text=Error'">
+            <div class="flex-1">
+              <h3 class="font-bold">${acc.name}</h3>
+              <p class="text-sm text-gray-300">القسم: ${acc.category} | النوع: ${acc.type}</p>
+              <p class="text-sm text-green-400">${acc.price}$</p>
+            </div>
+            <div class="flex flex-col gap-2">
+              <button onclick="event.stopPropagation(); window.showDetails(${JSON.stringify(acc).replace(/"/g, '&quot;')});" class="bg-blue-600 px-3 py-1 rounded text-xs">عرض</button>
+              <button onclick="event.stopPropagation(); window.deleteAccountPrompt('${acc.key}');" class="bg-red-600 px-3 py-1 rounded text-xs">حذف</button>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      });
+    }
+    
+    // ربط الدالة بكائن window للوصول إليها عالميًا
+    window.loadMyAccounts = loadMyAccounts;
+
+    // إضافة حساب جديد
+    function submitAccount(event) {
+      event.preventDefault();
+      
+      if (!window.currentUser) {
+        alert("يجب تسجيل الدخول أولاً");
+        return;
+      }
+      
+      const form = event.target;
+      const acc = {
+        name: form.querySelector("#accountName").value,
+        category: form.querySelector("#accountCategory").value,
+        type: form.querySelector("#accountType").value,
+        price: parseFloat(form.querySelector("#accountPrice").value),
+        contact: form.querySelector("#accountContact").value,
+        image: form.querySelector("#accountImage").value,
+        description: form.querySelector("#accountDescription").value || "",
+        date: new Date().toISOString(),
+        userId: window.currentUser.uid,
+        userDisplayName: window.currentUser.displayName,
+        userPhotoURL: window.currentUser.photoURL
+      };
+      
+      const accountsRef = window.firebaseServices.ref(window
+
+    // عرض تفاصيل الحساب
+    function showDetails(acc) {
+      currentAccountKey = acc.key;
+      document.getElementById("detailsImage").src = acc.image || "https://via.placeholder.com/400x200?text=No+Image";
+      document.getElementById("detailsName").innerText = acc.name;
+      document.getElementById("detailsCategory").innerText = `القسم: ${acc.category}`;
+      document.getElementById("detailsType").innerText = `النوع: ${acc.type}`;
+      document.getElementById("detailsPrice").innerText = `السعر: ${acc.price}$`;
+      document.getElementById("detailsDate").innerText = `تاريخ النشر: ${formatDate(acc.date)}`;
+      document.getElementById("detailsDescription").innerText = acc.description || "لا يوجد وصف";
+      
+      // معلومات البائع
+      document.getElementById("sellerAvatar").src = acc.userPhotoURL || "https://via.placeholder.com/50x50?text=?";
+      document.getElementById("sellerName").innerText = acc.userDisplayName || "بائع مجهول";
+      
+      // إظهار زر الحذف للمالك فقط
+      const deleteButton = document.getElementById("deleteAccountButton");
+      if (currentUser && acc.userId === currentUser.uid) {
+        deleteButton.classList.remove("hidden");
+      } else {
+        deleteButton.classList.add("hidden");
+      }
+      
+      // رابط التواصل
+      document.getElementById("detailsContact").href = `https://t.me/${acc.contact.replace('@', '')}`;
+      
+      showSection('accountDetails');
+    }
+
+    // حذف حساب
+    function deleteAccountPrompt(key) {
+      if (confirm("هل أنت متأكد من حذف هذا الحساب؟")) {
+        deleteAccountByKey(key);
+      }
+    }
+    
+    function deleteAccount() {
+      if (!currentAccountKey) return;
+      
+      if (confirm("هل أنت متأكد من حذف هذا الحساب؟")) {
+        deleteAccountByKey(currentAccountKey);
+      }
+    }
+    
+    function deleteAccountByKey(key) {
+      db.ref("accounts").child(key).remove().then(() => {
+        alert("تم حذف الحساب بنجاح!");
+        fetchAccounts();
+        showSection("mainContent");
+        if (document.getElementById("myAccountsSection").classList.contains("hidden") === false) {
+          loadMyAccounts();
+        }
+      }).catch(error => {
+        console.error("خطأ في حذف الحساب:", error);
+        alert("حدث خطأ أثناء حذف الحساب");
+      });
+    }
+
+    // تنسيق التاريخ
+    function formatDate(dateString) {
+      if (!dateString) return "غير معروف";
+      
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return dateString;
+      
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString('ar-SA', options);
+    }
+
+    // تحميل الحسابات عند بدء التطبيق
+    updateAccountTypes();
+    fetchAccounts();
+  </script>
+</body>
+  </html>
